@@ -1,0 +1,47 @@
+name: Connect to EC2 and Download Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  connect-and-download:
+    runs-on: self-hosted
+    container:
+      image: assassin010/zenika-plus-docker:zenika-plus-docker
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Session Manager Plugin
+        run: |
+          echo "Downloading Session Manager Plugin..."
+          curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+          echo "Installing Session Manager Plugin..."
+          sudo dpkg -i session-manager-plugin.deb
+
+      - name: Verify Session Manager Plugin Installation
+        run: |
+          echo "Verifying Session Manager Plugin installation..."
+          session_manager_plugin_version=$(session-manager-plugin --version 2>&1)
+          echo "Session Manager Plugin version: $session_manager_plugin_version"
+
+      - name: Configure AWS CLI and Connect to EC2 Instance
+        run: |
+          echo "Configuring AWS CLI..."
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          export AWS_DEFAULT_REGION=us-east-1  # Replace with your region
+          instance_id="i-05aae421de061543f"  # Replace with your instance ID
+          echo "Connecting to EC2 Instance..."
+          aws ssm start-session --target $instance_id
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+
+      - name: Download Files from the Internet
+        run: |
+          echo "Downloading files from the Internet..."
+          wget https://github.com/amazonlinux/amazon-linux-2023 -O /home/sguser/amazon-linux-2023
+          curl -O https://github.com/alpinelinux/docker-alpine/tree/7385303148c97ef32a3f225ec03bafa46b689d12/x86_64 -o /home/sguser/docker-alpine-x86_64
