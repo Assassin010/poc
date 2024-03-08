@@ -54,6 +54,9 @@ jobs:
       - name: Download Files from the Internet
         run: |
           echo "Downloading files from the Internet..."
+          ls /home/sguser/
+          ls | wc -l
+          pwd
           wget https://github.com/amazonlinux/amazon-linux-2023 -O /home/sguser/amazon-linux-2023
           curl -O https://github.com/alpinelinux/docker-alpine/tree/7385303148c97ef32a3f225ec03bafa46b689d12/x86_64 -o /home/sguser/docker-alpine-x86_64
 
