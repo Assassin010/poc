@@ -42,6 +42,8 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           export AWS_DEFAULT_REGION=us-east-1
 
+      - name: Create SSM Document
+        run: echo -n "$(cat download_files_ssm_document.json)" > ssm_document_content.json
 
       - name: Run SSM Document
         run: |
@@ -50,7 +52,7 @@ jobs:
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids $instance_id \
-            --parameters "commands=$(cat download_files_ssm_document.json)" \
+            --parameters "commands=$(cat ssm_document_content.json)"
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
