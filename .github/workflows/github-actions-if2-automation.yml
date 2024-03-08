@@ -33,8 +33,8 @@ jobs:
           echo "Configuring AWS CLI..."
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          export AWS_DEFAULT_REGION=us-east-1  # Replace with your region
-          instance_id="i-05aae421de061543f"  # Replace with your instance ID
+          export AWS_DEFAULT_REGION=us-east-1  
+          instance_id="i-05aae421de061543f"  
           echo "Connecting to EC2 Instance..."
           aws ssm start-session --target $instance_id
         env:
