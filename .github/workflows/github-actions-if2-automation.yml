@@ -12,6 +12,13 @@ jobs:
       image: assassin010/zenika-plus-docker:zenika-plus-docker
 
     steps:
+      - name: Debug Info
+        run: |
+          docker version
+          uname -a
+          cat /etc/os-release
+          cat /proc/cpuinfo
+
       - name: Checkout code
         uses: actions/checkout@v2
 
