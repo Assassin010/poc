@@ -30,6 +30,8 @@ jobs:
           export AWS_DEFAULT_REGION=us-east-1
 
       - name: Start SSM Session
+        env:
+          AWS_DEFAULT_REGION: us-east-1  
         run: |
           instance_id="i-05aae421de061543f"
           echo "Connecting to EC2 Instance..."
