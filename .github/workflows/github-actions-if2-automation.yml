@@ -22,44 +22,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Session Manager Plugin
+      - name: Install AWS CLI
         run: |
-          echo "Downloading Session Manager Plugin..."
-          curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-          echo "Installing Session Manager Plugin..."
-          dpkg -i session-manager-plugin.deb
-      - name: Verify Session Manager Plugin Installation
-        id: session_manager_installation
-        run: |
-          echo "Verifying Session Manager Plugin installation..."
-          session_manager_plugin_version=$(session-manager-plugin --version 2>&1)
-          echo "Session Manager Plugin version: $session_manager_plugin_version"
-          # Extract the container ID
-          container_id=$(docker ps --latest --quiet)
-          echo "::set-output name=container_id::$container_id"
-        shell: bash
-
-      - name: Configure AWS CLI and Connect to EC2 Instance
+          echo "Installing AWS CLI..."
+          sudo apt-get update
+          sudo apt-get install -y awscli
+          
+      - name: Configure AWS CLI
         run: |
           echo "Configuring AWS CLI..."
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          export AWS_DEFAULT_REGION=us-east-1  
-          instance_id="i-05aae421de061543f"  
+          export AWS_DEFAULT_REGION=us-east-1
+
+      - name: Start SSM Session
+        run: |
+          instance_id="i-05aae421de061543f"
           echo "Connecting to EC2 Instance..."
           aws ssm start-session --target $instance_id
-        env:
-          AWS_DEFAULT_REGION: us-east-1
-
-      - name: Download Files from the Internet
-        run: |
+          
+          # Commands to check your environment inside the EC2 instance
+          echo "Inside the EC2 instance."
+          echo "Current directory: $(pwd)"
+          echo "List files: $(ls)"
+          echo "Running uname -a: $(uname -a)"
+          
+          # Download files from the Internet
           echo "Downloading files from the Internet..."
-          ls /home/sguser/
-          ls | wc -l
-          pwd
           wget https://github.com/amazonlinux/amazon-linux-2023 -O /home/sguser/amazon-linux-2023
           curl -O https://github.com/alpinelinux/docker-alpine/tree/7385303148c97ef32a3f225ec03bafa46b689d12/x86_64 -o /home/sguser/docker-alpine-x86_64
-
+          
   cleanup:
     runs-on: ubuntu-latest
     needs: connect-and-download
