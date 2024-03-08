@@ -42,24 +42,38 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           export AWS_DEFAULT_REGION=us-east-1
 
-      - name: Start SSM Session
-        env:
-          AWS_DEFAULT_REGION: us-east-1  
+
+      - name: Run SSM Document
         run: |
           instance_id="i-05aae421de061543f"
           echo "Connecting to EC2 Instance..."
-          aws ssm start-session --target $instance_id
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --instance-ids $instance_id \
+            --parameters "commands=$(cat download_files_ssm_document.json)" \
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_DEFAULT_REGION: us-east-1  
+
+      # - name: Start SSM Session
+      #   env:
+      #     AWS_DEFAULT_REGION: us-east-1  
+      #   run: |
+      #     instance_id="i-05aae421de061543f"
+      #     echo "Connecting to EC2 Instance..."
+      #     aws ssm start-session --target $instance_id
           
-          # Commands to check your environment inside the EC2 instance
-          echo "Inside the EC2 instance."
-          echo "Current directory: $(pwd)"
-          echo "List files: $(ls)"
-          echo "Running uname -a: $(uname -a)"
+      #     # Commands to check your environment inside the EC2 instance
+      #     echo "Inside the EC2 instance."
+      #     echo "Current directory: $(pwd)"
+      #     echo "List files: $(ls)"
+      #     echo "Running uname -a: $(uname -a)"
           
-          # Download files from the Internet
-          echo "Downloading files from the Internet..."
-          wget https://github.com/amazonlinux/amazon-linux-2023 -O /home/sguser/amazon-linux-2023
-          curl -O https://github.com/alpinelinux/docker-alpine/tree/7385303148c97ef32a3f225ec03bafa46b689d12/x86_64 -o /home/sguser/docker-alpine-x86_64
+      #     # Download files from the Internet
+      #     echo "Downloading files from the Internet..."
+      #     wget https://github.com/amazonlinux/amazon-linux-2023 -O /home/sguser/amazon-linux-2023
+      #     curl -O https://github.com/alpinelinux/docker-alpine/tree/7385303148c97ef32a3f225ec03bafa46b689d12/x86_64 -o /home/sguser/docker-alpine-x86_64
           
   cleanup:
     runs-on: ubuntu-latest
