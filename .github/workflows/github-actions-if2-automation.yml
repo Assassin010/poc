@@ -43,7 +43,11 @@ jobs:
           export AWS_DEFAULT_REGION=us-east-1
 
       - name: Create SSM Document
-        run: echo -n "$(cat download_files_ssm_document.json)" > ssm_document_content.json
+        run: |
+          ls -al
+          pwd
+          ls
+          echo -n "$(cat download_files_ssm_document.json)" > ssm_document_content.json
 
       - name: Run SSM Document
         run: |
