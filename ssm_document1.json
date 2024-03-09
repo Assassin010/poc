@@ -1,45 +1,38 @@
 {
-  "schemaVersion": "2.2",
-  "description": "Download images based on URL mappings",
-  "mainSteps": [
-    {
-      "action": "aws:runShellScript",
-      "name": "downloadImages",
-      "inputs": {
-        "runCommand": [
-          "#!/bin/bash",
-          "BASE_DIR=\"/home/sguser\"",
-          "declare -A IMAGE_MAPPING",
-          "IMAGE_MAPPING=(",
-          "  {\"url\": \"https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy/\", \"name\": \"Ubuntu22.04-source\"},",
-          "  {\"url\": \"https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal/\", \"name\": \"Ubuntu20.04-source\"},",
-          "  {\"url\": \"https://download.opensuse.org/\", \"name\": \"Suse\"},",
-          "  {\"url\": \"https://amazonlinux.pkgs.org/2/amazonlinux-core-x86_64/\", \"name\": \"AmazonLinux2\"},",
-          "  {\"url\": \"https://git.centos.org/sources/\", \"name\": \"Centos\"},",
-          "  {\"url\": \"https://access.redhat.com/downloads/content/rhel\", \"name\": \"Redhat\"},",
-          "  {\"url\": \"http://ftp.debian.org/debian/\", \"name\": \"Debian\"},",
-          "  {\"url\": \"https://git.launchpad.net/cloud-images/+oci/ubuntu-base/tree/oci/index.json?h=refs/tags/dist-focal-amd64-20240123-fb52992f&id=fb52992ff7e59e29008a6e1fa583207d2f36b9fe\", \"name\": \"Ubuntu20.04\"},",
-          "  {\"url\": \"https://git.launchpad.net/cloud-images/+oci/ubuntu-base/tree/oci/index.json?h=refs/tags/dist-jammy-amd64-20240125-09015311&id=090153117a4ac607556c868f91937e9a4b085697\", \"name\": \"Ubuntu22.04\"},",
-          "  {\"url\": \"https://git.launchpad.net/cloud-images/+oci/ubuntu-base/tree/oci/index.json?h=refs/tags/dist-noble-amd64-20240127.1-3b522bb2&id=3b522bb20a4c6b1895481998458cf50d761e2822\", \"name\": \"Ubuntu24.04\"},",
-          "  {\"url\": \"https://download.docker.com/linux/centos/9/x86_64/stable/\", \"name\": \"Centos9\"},",
-          "  {\"url\": \"https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/package_manifest/package_lists_base_repository\", \"name\": \"Redhat7\"}",
-          ")",
-          "download_url() {",
-          "  url=${1[\"url\"]}",
-          "  image_name=${1[\"name\"]}",
-          "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
-          "    mkdir -p \"$BASE_DIR/$image_name\"",
-          "    wget -P \"$BASE_DIR/$image_name\" \"$url\"",
-          "  else",
-          "    echo \"Skipping $url. Subdirectory already exists.\"",
-          "  fi",
-          "}",
-          "for entry in \"${IMAGE_MAPPING[@]}\"; do",
-          "  download_url \"$entry\"",
-          "done",
-          "exit 0"
-        ]
-      }
-    }
-  ]
+  "documentName": "AWS-RunShellScript",
+  "parameters": {
+    "commands": [
+      "#!/bin/bash",
+      "BASE_DIR=\"/home/sguser\"",
+      "declare -A IMAGE_MAPPING",
+      "IMAGE_MAPPING=(",
+      "  {\"url\": \"https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy/\", \"name\": \"Ubuntu22.04-source\"},",
+      "  {\"url\": \"https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal/\", \"name\": \"Ubuntu20.04-source\"},",
+      "  {\"url\": \"https://download.opensuse.org/\", \"name\": \"Suse\"},",
+      "  {\"url\": \"https://amazonlinux.pkgs.org/2/amazonlinux-core-x86_64/\", \"name\": \"AmazonLinux2\"},",
+      "  {\"url\": \"https://git.centos.org/sources/\", \"name\": \"Centos\"},",
+      "  {\"url\": \"https://access.redhat.com/downloads/content/rhel\", \"name\": \"Redhat\"},",
+      "  {\"url\": \"http://ftp.debian.org/debian/\", \"name\": \"Debian\"},",
+      "  {\"url\": \"https://git.launchpad.net/cloud-images/+oci/ubuntu-base/tree/oci/index.json?h=refs/tags/dist-focal-amd64-20240123-fb52992f&id=fb52992ff7e59e29008a6e1fa583207d2f36b9fe\", \"name\": \"Ubuntu20.04\"},",
+      "  {\"url\": \"https://git.launchpad.net/cloud-images/+oci/ubuntu-base/tree/oci/index.json?h=refs/tags/dist-jammy-amd64-20240125-09015311&id=090153117a4ac607556c868f91937e9a4b085697\", \"name\": \"Ubuntu22.04\"},",
+      "  {\"url\": \"https://git.launchpad.net/cloud-images/+oci/ubuntu-base/tree/oci/index.json?h=refs/tags/dist-noble-amd64-20240127.1-3b522bb2&id=3b522bb20a4c6b1895481998458cf50d761e2822\", \"name\": \"Ubuntu24.04\"},",
+      "  {\"url\": \"https://download.docker.com/linux/centos/9/x86_64/stable/\", \"name\": \"Centos9\"},",
+      "  {\"url\": \"https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/package_manifest/package_lists_base_repository\", \"name\": \"Redhat7\"}",
+      ")",
+      "download_url() {",
+      "  url=${1[\"url\"]}",
+      "  image_name=${1[\"name\"]}",
+      "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
+      "    mkdir -p \"$BASE_DIR/$image_name\"",
+      "    wget -P \"$BASE_DIR/$image_name\" \"$url\"",
+      "  else",
+      "    echo \"Skipping $url. Subdirectory already exists.\"",
+      "  fi",
+      "}",
+      "for entry in \"${IMAGE_MAPPING[@]}\"; do",
+      "  download_url \"$entry\"",
+      "done",
+      "exit 0"
+    ]
+  }
 }
