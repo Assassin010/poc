@@ -56,7 +56,6 @@ jobs:
             --instance-ids $instance_id \
             --timeout-seconds 18000 \
             --max-concurrency "50" \
-            --debug true \
             --max-errors "0" \
             --parameters workingDirectory="/",executionTimeout="18000" \
             --output-s3-bucket-name "pocgithubactions" \
@@ -78,7 +77,6 @@ jobs:
             --instance-ids $instance_id \
             --timeout-seconds 18000 \
             --max-concurrency "50" \
-            --debug true \
             --max-errors "0" \
             --parameters workingDirectory="/",executionTimeout="18000" \
             --output-s3-bucket-name "pocgithubactions" \
