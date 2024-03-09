@@ -47,7 +47,6 @@ jobs:
           echo -n "$(cat ssm_document1.json | jq -c)" > ssm_document_content1.json
           echo -n "$(cat ssm_document2.json | jq -c)" > ssm_document_content2.json
 
-
       - name: Run SSM Document NON GIT
         run: |
           instance_id="i-05aae421de061543f"
