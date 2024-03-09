@@ -59,7 +59,7 @@ jobs:
             --max-errors "0" \
             --parameters workingDirectory="/",executionTimeout="18000" \
             --output-s3-bucket-name "pocgithubactions" \
-            --cloud-watch-output-config "CloudWatchOutputEnabled=true,CloudWatchOutputName=non-git" \
+            --cloud-watch-output-config "CloudWatchOutputEnabled=true,CloudWatchLogGroupName=non-git" \
             --cli-input-json "$(cat ssm_document_content1.json)"
             --service-role-arn "arn:aws:iam::955769636964:role/SNS_Role" \    
             #--notification-config "NotificationArn=arn:aws:sns:us-east-1:955769636964:ssm_execution_status,NotificationEvents=All,NotificationType=Command"
@@ -80,7 +80,7 @@ jobs:
             --max-errors "0" \
             --parameters workingDirectory="/",executionTimeout="18000" \
             --output-s3-bucket-name "pocgithubactions" \
-            --cloud-watch-output-config "CloudWatchOutputEnabled=true,CloudWatchOutputName=git" \
+            --cloud-watch-output-config "CloudWatchOutputEnabled=true,CloudWatchLogGroupName=git" \
             --cli-input-json "$(cat ssm_document_content2.json)"
             --service-role-arn "arn:aws:iam::955769636964:role/SNS_Role" \    
             #--notification-config "NotificationArn=arn:aws:sns:us-east-1:955769636964:ssm_execution_status,NotificationEvents=All,NotificationType=Command"            
