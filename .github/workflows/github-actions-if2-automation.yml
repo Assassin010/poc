@@ -44,42 +44,53 @@ jobs:
 
       - name: Create SSM Document
         run: |
-          ls -al
-          pwd
-          ls
-          echo -n "$(cat download_files_ssm_document.json | jq -c)" > ssm_document_content.json
+          echo -n "$(cat ssm_document1.json | jq -c)" > ssm_document_content1.json
+          echo -n "$(cat ssm_document2.json | jq -c)" > ssm_document_content2.json
 
-      - name: Run SSM Document
+
+      - name: Run SSM Document NON GIT
         run: |
           instance_id="i-05aae421de061543f"
           echo "Connecting to EC2 Instance..."
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids $instance_id \
-            --cli-input-json "$(cat ssm_document_content.json)"
+            --timeout-seconds 18000 \
+            --max-concurrency "50" \
+            --debug true \
+            --max-errors "0" \
+            --parameters workingDirectory="/",executionTimeout="18000" \
+            --output-s3-bucket-name "pocgithubactions" \
+            --cloud-watch-output-config "CloudWatchOutputEnabled=true,CloudWatchOutputName=non-git" \
+            --cli-input-json "$(cat ssm_document_content1.json)”
+            --service-role-arn "arn:aws:iam::955769636964:role/SNS_Role" \    
+            --notification-config "NotificationArn=arn:aws:sns:us-east-1:955769636964:ssm_execution_status,NotificationEvents=All,NotificationType=Command"
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_DEFAULT_REGION: us-east-1  
-
-      # - name: Start SSM Session
-      #   env:
-      #     AWS_DEFAULT_REGION: us-east-1  
-      #   run: |
-      #     instance_id="i-05aae421de061543f"
-      #     echo "Connecting to EC2 Instance..."
-      #     aws ssm start-session --target $instance_id
-          
-      #     # Commands to check your environment inside the EC2 instance
-      #     echo "Inside the EC2 instance."
-      #     echo "Current directory: $(pwd)"
-      #     echo "List files: $(ls)"
-      #     echo "Running uname -a: $(uname -a)"
-          
-      #     # Download files from the Internet
-      #     echo "Downloading files from the Internet..."
-      #     wget https://github.com/amazonlinux/amazon-linux-2023 -O /home/sguser/amazon-linux-2023
-      #     curl -O https://github.com/alpinelinux/docker-alpine/tree/7385303148c97ef32a3f225ec03bafa46b689d12/x86_64 -o /home/sguser/docker-alpine-x86_64
+            
+      - name: Run SSM Document GIT
+        run: |
+          instance_id="i-05aae421de061543f"
+          echo "Connecting to EC2 Instance..."
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --instance-ids $instance_id \
+            --timeout-seconds 18000 \
+            --max-concurrency "50" \
+            --debug true \
+            --max-errors "0" \
+            --parameters workingDirectory="/",executionTimeout="18000" \
+            --output-s3-bucket-name "pocgithubactions" \
+            --cloud-watch-output-config "CloudWatchOutputEnabled=true,CloudWatchOutputName=git" \
+            --cli-input-json "$(cat ssm_document_content2.json)”
+            --service-role-arn "arn:aws:iam::955769636964:role/SNS_Role" \    
+            --notification-config "NotificationArn=arn:aws:sns:us-east-1:955769636964:ssm_execution_status,NotificationEvents=All,NotificationType=Command"            
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_DEFAULT_REGION: us-east-1  
           
   cleanup:
     runs-on: ubuntu-latest
