@@ -34,7 +34,7 @@
           "    echo \"Skipping $url. Subdirectory already exists.\"",
           "  fi",
           "}",
-          "for entry in \"${IMAGE_MAPPING[@]}\"; do",
+          "for entry in \"\${IMAGE_MAPPING[@]}\"; do",
           "  download_url \"$entry\"",
           "done",
           "exit 0"
