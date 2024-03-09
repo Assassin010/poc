@@ -1,38 +1,38 @@
 {
-    "schemaVersion": "2.2",
-    "description": "Download GitHub repositories",
-    "mainSteps": [
-      {
-        "action": "aws:runShellScript",
-        "name": "downloadGitHubRepos",
-        "inputs": {
-          "runCommand": [
-            "#!/bin/bash",
-            "BASE_DIR=\"/home/sguser\"",
-            "declare -A GITHUB_REPOS",
-            "GITHUB_REPOS=(",
-            "  {\"url\": \"https://github.com/amazonlinux/amazon-linux-2023\", \"name\": \"amazonlinux2023\"},",
-            "  {\"url\": \"https://github.com/alpinelinux/docker-alpine\", \"name\": \"Alpine\"},",
-            "  {\"url\": \"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/buster/slim\", \"name\": \"Debian10\"},",
-            "  {\"url\": \"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/bullseye/slim\", \"name\": \"Debian11\"}",
-            ")",
-            "download_github_repo() {",
-            "  repo_url=${1[\"url\"]}",
-            "  image_name=${1[\"name\"]}",
-            "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
-            "    mkdir -p \"$BASE_DIR/$image_name\"",
-            "    release_url=$(curl -sL --insecure \"$repo_url/releases/latest\" | grep -o -E \"https://github.com/[^/]+/[^/]+/archive/[^/]+.zip\")",
-            "    wget -O \"$BASE_DIR/$image_name/$image_name.zip\" \"$release_url\"",
-            "  else",
-            "    echo \"Skipping $repo_url. Subdirectory already exists.\"",
-            "  fi",
-            "}",
-            "for entry in \"${GITHUB_REPOS[@]}\"; do",
-            "  download_github_repo \"$entry\"",
-            "done",
-            "exit 0"
-          ]
-        }
+  "schemaVersion": "2.2",
+  "description": "Download GitHub repositories",
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "downloadGitHubRepos",
+      "inputs": {
+        "runCommand": [
+          "#!/bin/bash",
+          "BASE_DIR=\"/home/sguser\"",
+          "declare -A GITHUB_REPOS",
+          "GITHUB_REPOS=(",
+          "  {\"url\": \"https://github.com/amazonlinux/amazon-linux-2023\", \"name\": \"amazonlinux2023\"},",
+          "  {\"url\": \"https://github.com/alpinelinux/docker-alpine\", \"name\": \"Alpine\"},",
+          "  {\"url\": \"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/buster/slim\", \"name\": \"Debian10\"},",
+          "  {\"url\": \"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/bullseye/slim\", \"name\": \"Debian11\"}",
+          ")",
+          "download_github_repo() {",
+          "  repo_url=${1[\"url\"]}",
+          "  image_name=${1[\"name\"]}",
+          "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
+          "    mkdir -p \"$BASE_DIR/$image_name\"",
+          "    release_url=$(curl -sL --insecure \"$repo_url/releases/latest\" | grep -o -E \"https://github.com/[^/]+/[^/]+/archive/[^/]+.zip\")",
+          "    wget -O \"$BASE_DIR/$image_name/$image_name.zip\" \"$release_url\"",
+          "  else",
+          "    echo \"Skipping $repo_url. Subdirectory already exists.\"",
+          "  fi",
+          "}",
+          "for entry in \"\${GITHUB_REPOS[@]}\"; do",
+          "  download_github_repo \"$entry\"",
+          "done",
+          "exit 0"
+        ]
       }
-    ]
-  }
+    }
+  ]
+}
