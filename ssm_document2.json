@@ -1,6 +1,6 @@
 {
-  "documentName": "AWS-RunShellScript",
-  "parameters": {
+  "DocumentName": "AWS-RunShellScript",
+  "Parameters": {
     "commands": [
       "#!/bin/bash",
       "BASE_DIR=\"/home/sguser\"",
