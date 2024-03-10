@@ -20,7 +20,7 @@
       "  [\"https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/package_manifest/package_lists_base_repository\"]=\"Redhat7\"",
       ")",
       "download_url() {",
-      "  url=${!IMAGE_MAPPING[@]}",
+      "  url=$1",
       "  image_name=${IMAGE_MAPPING[$url]}",
       "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
       "    mkdir -p \"$BASE_DIR/$image_name\"",
@@ -30,7 +30,7 @@
       "  fi",
       "}",
       "for url in \"${!IMAGE_MAPPING[@]}\"; do",
-      "  download_url",
+      "  download_url \"$url\"",
       "done",
       "exit 0"
     ]
