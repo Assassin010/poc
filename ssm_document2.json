@@ -12,7 +12,7 @@
       "  [\"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/bullseye/slim\"]=\"Debian11\"",
       ")",
       "download_github_repo() {",
-      "  repo_url=${!GITHUB_REPOS[@]}",
+      "  repo_url=$1",
       "  image_name=${GITHUB_REPOS[$repo_url]}",
       "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
       "    mkdir -p \"$BASE_DIR/$image_name\"",
@@ -23,7 +23,7 @@
       "  fi",
       "}",
       "for repo_url in \"${!GITHUB_REPOS[@]}\"; do",
-      "  download_github_repo",
+      "  download_github_repo \"$repo_url\"",
       "done",
       "exit 0"
     ]
