@@ -3,7 +3,6 @@
   "Parameters": {
     "commands": [
       "#!/bin/bash",
-      "cd /",  # Change the working directory (which root in this case). This where the script will start to run script from.
       "BASE_DIR=\"/home/sguser\"",
       "declare -A IMAGE_MAPPING",
       "IMAGE_MAPPING=(",
