@@ -1,29 +1,31 @@
-#!/bin/bash
-
-BASE_DIR="/home/sguser"
-
-declare -A GITHUB_REPOS
-GITHUB_REPOS=(
-  ["https://github.com/amazonlinux/amazon-linux-2023"]="amazonlinux2023"
-  ["https://github.com/alpinelinux/docker-alpine"]="Alpine"
-  ["https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/buster/slim"]="Debian10"
-  ["https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/bullseye/slim"]="Debian11"
-)
-
-download_github_repo() {
-  repo_url=${!GITHUB_REPOS[@]}
-  image_name=${GITHUB_REPOS[$repo_url]}
-  if [ ! -d "$BASE_DIR/$image_name" ]; then
-    mkdir -p "$BASE_DIR/$image_name"
-    release_url=$(curl -sL --insecure "$repo_url/releases/latest" | grep -o -E "https://github.com/[^/]+/[^/]+/archive/[^/]+.zip")
-    wget -O "$BASE_DIR/$image_name/$image_name.zip" "$release_url"
-  else
-    echo "Skipping $repo_url. Subdirectory already exists."
-  fi
+{
+  "DocumentName": "AWS-RunShellScript",
+  "Parameters": {
+    "commands": [
+      "#!/bin/bash",
+      "BASE_DIR=\"/home/sguser\"",
+      "declare -A GITHUB_REPOS",
+      "GITHUB_REPOS=(",
+      "  [\"https://github.com/amazonlinux/amazon-linux-2023\"]=\"amazonlinux2023\",",
+      "  [\"https://github.com/alpinelinux/docker-alpine\"]=\"Alpine\",",
+      "  [\"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/buster/slim\"]=\"Debian10\",",
+      "  [\"https://github.com/debuerreotype/docker-debian-artifacts/tree/acf606d9f8b010b8997897c8c0ba065a93fb9f65/bullseye/slim\"]=\"Debian11\"",
+      ")",
+      "download_github_repo() {",
+      "  repo_url=${!GITHUB_REPOS[@]}",
+      "  image_name=${GITHUB_REPOS[$repo_url]}",
+      "  if [ ! -d \"$BASE_DIR/$image_name\" ]; then",
+      "    mkdir -p \"$BASE_DIR/$image_name\"",
+      "    release_url=$(curl -sL --insecure \"$repo_url/releases/latest\" | grep -o -E \"https://github.com/[^/]+/[^/]+/archive/[^/]+.zip\")",
+      "    wget -O \"$BASE_DIR/$image_name/$image_name.zip\" \"$release_url\"",
+      "  else",
+      "    echo \"Skipping $repo_url. Subdirectory already exists.\"",
+      "  fi",
+      "}",
+      "for repo_url in \"${!GITHUB_REPOS[@]}\"; do",
+      "  download_github_repo",
+      "done",
+      "exit 0"
+    ]
+  }
 }
-
-for repo_url in "${!GITHUB_REPOS[@]}"; do
-  download_github_repo
-done
-
-exit 0
